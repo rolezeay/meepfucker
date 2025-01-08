@@ -43,7 +43,7 @@ testButton.MouseButton1Click:Connect(function()
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Meep Fucker V1.6",
+    Title = "Meep Fucker V1.7",
     Text = "Gui is loading..",
     Icon = playerHeadIcon,
     Duration = 5,
@@ -73,9 +73,9 @@ end
 
 playOpeningSound()
 local Window = Rayfield:CreateWindow({
-   Name = "Meepcity Fucker V1.6 | " .. executorName .. " | " .. gameName,
+   Name = "Meepcity Fucker V1.7 | " .. executorName .. " | " .. gameName,
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Meepcity Fucker v1.6",
+   LoadingTitle = "Meepcity Fucker v1.7",
    LoadingSubtitle = "by plusgiant",
    Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
@@ -583,6 +583,99 @@ local Toggle = Tab:CreateToggle({
             end)
         end
    end,
+})
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local localPlayer = Players.LocalPlayer
+local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+
+local spinningToggle = false -- Default toggle state
+local activeSpinConnections = {} -- Stores active connections to stop them when toggled off
+
+-- Function to spin around a single player
+local function spinAroundPlayer(targetPlayer)
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    local targetCharacter = targetPlayer.Character
+    if not targetCharacter then return end
+
+    local targetRoot = targetCharacter:FindFirstChild("HumanoidRootPart")
+    if not targetRoot then return end
+
+    local spinDuration = 2 -- Adjust as needed
+    local radius = 6 -- Distance from the player
+    local spinSpeed = 720 -- Rotation speed in degrees per second
+
+    local startTime = tick()
+    local connection
+
+    connection = RunService.Heartbeat:Connect(function()
+        if not spinningToggle then
+            connection:Disconnect()
+            return
+        end
+
+        local elapsedTime = tick() - startTime
+        if elapsedTime > spinDuration then
+            connection:Disconnect()
+            return
+        end
+
+        local angle = math.rad((elapsedTime * spinSpeed) % 360)
+        local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
+        local targetPosition = targetRoot.Position + offset
+
+        rootPart.CFrame = CFrame.new(targetPosition, targetRoot.Position)
+    end)
+
+    -- Add the connection to the list of active connections
+    table.insert(activeSpinConnections, connection)
+    wait(spinDuration)
+end
+
+-- Function to spin around all players
+local function spinAroundAllPlayers()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= localPlayer then
+            pcall(function()
+                spinAroundPlayer(player)
+            end)
+        end
+    end
+end
+
+-- Function to start spinning
+local function startSpinning()
+    while spinningToggle do
+        spinAroundAllPlayers()
+        wait(0.1) -- Slight delay to prevent overloading
+    end
+end
+
+-- Function to stop spinning
+local function stopSpinning()
+    for _, connection in ipairs(activeSpinConnections) do
+        connection:Disconnect()
+    end
+    activeSpinConnections = {} -- Clear the list of active connections
+end
+
+-- Create the toggle
+local SpinToggle = Tab:CreateToggle({
+    Name = "Spin Around Players",
+    CurrentValue = false,
+    Flag = "SpinToggle",
+    Callback = function(value)
+        spinningToggle = value
+        if spinningToggle then
+            spawn(startSpinning) -- Start spinning
+        else
+            stopSpinning() -- Stop spinning
+        end
+    end,
 })
 
 local player = game.Players.LocalPlayer
@@ -1216,6 +1309,50 @@ Tab:CreateButton({
                 else
                     notify("Spectate Failed", "Target player not valid.")
                 end
+            else
+                notify("No Player Selected", "Please select a player first.")
+            end
+        end
+    end,
+})
+
+-- TP bang Toggle Button with LookAt Functionality
+Tab:CreateButton({
+    Name = "TP bang Player",
+    Callback = function()
+        if bangActive then
+            bangActive = false
+            if bangConnection then
+                bangConnection:Disconnect()
+                bangConnection = nil
+            end
+            notify("TP bang Stopped", "stopped banging.")
+        else
+            if selectedPlayer then
+                bangActive = true
+                bangConnection = RunService.Stepped:Connect(function()
+                    local targetCharacter = getPlayerCharacter(selectedPlayer)
+                    if targetCharacter and targetCharacter:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        -- Get positions
+                        local targetPosition = targetCharacter.HumanoidRootPart.Position
+                        local myRootPart = LocalPlayer.Character.HumanoidRootPart
+                        local direction = (targetPosition - myRootPart.Position).unit
+
+                        -- Move back and forth rapidly
+                        myRootPart.CFrame = CFrame.lookAt(myRootPart.Position, targetPosition) -- Face the target
+                        myRootPart.CFrame = CFrame.new(targetPosition + direction * 3, targetPosition) -- Move towards the target
+                        wait(0.1) -- Wait for a short time
+                        myRootPart.CFrame = CFrame.new(targetPosition - direction * 3, targetPosition) -- Move away from the target
+                    else
+                        bangActive = false
+                        if bangConnection then
+                            bangConnection:Disconnect()
+                            bangConnection = nil
+                        end
+                        notify("TP bang Stopped", "Target player no longer valid.")
+                    end
+                end)
+                notify("TP bang Started", "'banging' " .. selectedPlayer)
             else
                 notify("No Player Selected", "Please select a player first.")
             end
