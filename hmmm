@@ -1,9 +1,19 @@
+ local function service(...) return game:GetService(...) end
+local Players = service("Players")
+local MarketplaceService = service("MarketplaceService")
+local ReplicatedStorage = service("ReplicatedStorage")
+local HttpService = service("HttpService")
+
+local Constants = require(ReplicatedStorage:WaitForChild("Constants"))
+local Connection = ReplicatedStorage:WaitForChild("Connection")
+local ConnectionEvent = ReplicatedStorage:WaitForChild("ConnectionEvent")
+ 
   local player = game.Players.LocalPlayer
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Meep Fucker V1.8",
-    Text = "Gui is loading..",
+    Title = "Meep Fucker v1.9",
+    Text = "made with love by plusgiant on discord.",
     Icon = playerHeadIcon,
     Duration = 5,
     Button1 = "kys bro🤓"
@@ -28,14 +38,20 @@ local function playOpeningSound()
     openingSound:Play()
 end
 
-
-
 playOpeningSound()
+
+Rayfield:Notify({
+   Title = "DISCLAIMER",
+   Content = "Some stuff on the gui (specially the Meepcity tab) may not work properly depending on your executors power. I, myself tested everything on a powerful pc executor and everything works normal.",
+   Duration = 13,
+   Image = 10730387329,
+})
+
 local Window = Rayfield:CreateWindow({
-   Name = "Meepcity Fucker V1.8 | " .. executorName .. " | " .. gameName,
+   Name = "Meepcity Fucker v1.9 | " .. executorName .. " | " .. gameName,
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Meepcity Fucker v1.8",
-   LoadingSubtitle = "by plusgiant",
+   LoadingTitle = "Meepcity Fucker v1.9",
+   LoadingSubtitle = "by plusgiant on discord",
    Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    DisableRayfieldPrompts = false,
@@ -715,7 +731,80 @@ local Button = Tab:CreateButton({
 
 local Section = Tab:CreateSection("Step 3 enjoy annoying teenager speds!")
 
-local Tab = Window:CreateTab("Meepcity", 126133429358591) -- Title, Image
+local Tab = Window:CreateTab("Meepcity (NEW)", 126133429358591) -- Title, Image,
+
+local Section = Tab:CreateSection("NEW ON V1.9")
+
+local Button = Tab:CreateButton({
+   Name = "Unlimited Whisper Length",
+   Callback = function()
+Constants.STATS.WHISPER_MAX_CHARACTERS = math.huge
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "100% Catching Fish Luck",
+   Callback = function()
+	Constants.STATS.FISHCastObjectMinDistanceToCatch = math.huge
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Unlimited Fishing Bucket Size",
+   Callback = function()
+	Constants.STATS.FISHMaxAllowedInBucket = math.huge
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Extra Category For Offsale Items (Playground)",
+   Callback = function()
+	if not onsaleran then
+		onsaleran = true
+		local function onsale(module)
+			local fd = require(module)
+			local id = 666
+			fd.Categories[id] = {
+				CategoryId = id,
+				Image = 10730387329,
+				CatTitle = "Meepcity Fucker offsales 👅"
+
+			}
+			for i,v in pairs(fd.Assets) do
+				if not fd.Assets[i].ForSale then
+					fd.Assets[i].ForSale = true
+					if fd.Assets[i].Details.Price.HalloweenCandy then
+						fd.Assets[i].Details.Price.HalloweenCandy = nil
+					end
+					fd.Assets[i].CatId = id
+					fd.Assets[i].Desc = "this is an offsale item that got brought back to life"
+				end
+			end
+		end
+		onsale(game.ReplicatedStorage:WaitForChild("Shop_Furniture"))
+		onsale(game.ReplicatedStorage:WaitForChild("Shop_Toys"))
+		onsale(game.ReplicatedStorage:WaitForChild("Shop_HomeImprovement"))
+		onsale(game.ReplicatedStorage:WaitForChild("Shop_PetShop"))
+	end
+
+Rayfield:Notify({
+   Title = "Meepcity Fucker",
+   Content = "Now you can go check the stores on the playground to get the secret category for offsale items!",
+   Duration = 6.5,
+   Image = 10730387329,
+})
+
+   end,
+})
+
+
+local Button = Tab:CreateButton({
+   Name = "Open Server Browser (Backyard Server Browser Included)",
+   Callback = function()
+local serverbrowsermodule = require(game.Players.LocalPlayer.PlayerGui:WaitForChild("ServerBrowserGui"):WaitForChild("ServerBrowserGUI"))
+	serverbrowsermodule.Open()
+   end,
+})
 
 local Section = Tab:CreateSection("FE")
 
