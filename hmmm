@@ -61,7 +61,7 @@ ScreenGui:Destroy()
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Meep Fucker v1.9",
+    Title = "Meep Fucker v2.0",
     Text = "made with love by plusgiant on discord.",
     Icon = playerHeadIcon,
     Duration = 5,
@@ -97,9 +97,9 @@ Rayfield:Notify({
 })
 
 local Window = Rayfield:CreateWindow({
-   Name = "Meepcity Fucker v1.9 | " .. executorName .. " | " .. gameName,
+   Name = "Meepcity Fucker v2.0 | " .. executorName .. " | " .. gameName,
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Meepcity Fucker v1.9",
+   LoadingTitle = "Meepcity Fucker v2.0",
    LoadingSubtitle = "by plusgiant on discord",
    Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
@@ -129,7 +129,7 @@ local Window = Rayfield:CreateWindow({
       Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
    }
 })
-local Tab = Window:CreateTab("Main", 16365563022) -- Title, Image
+local Tab = Window:CreateTab("Main", 10730387329) -- Title, Image
 
 local Section = Tab:CreateSection("Optional Settings")
 
@@ -780,9 +780,9 @@ local Button = Tab:CreateButton({
 
 local Section = Tab:CreateSection("Step 3 enjoy annoying teenager speds!")
 
-local Tab = Window:CreateTab("Meepcity (NEW)", 126133429358591) -- Title, Image,
+local Tab = Window:CreateTab("Meepcity (NEW)", 105651797171702) -- Title, Image,
 
-local Section = Tab:CreateSection("NEW ON V1.9")
+local Section = Tab:CreateSection("NEW ON V2.0")
 
 local Button = Tab:CreateButton({
    Name = "Unlimited Whisper Length",
@@ -1197,7 +1197,7 @@ local Button = Tab:CreateButton({
         [1] = 11,
         [2] = {
             ["Power"] = 1,
-            ["FishingZonePos"] = Vector3.new(81.966064453125, -18.149871826171875, 96.40253448486328),
+            ["FishingZonePos"] = Vector3.new(82.066064453125, -18.149871826171875, 96.40253448486328),
             ["Face"] = Vector3.new(0.9990392923355103, 0.005603702738881111, -0.04346461594104767),
             ["PlayerPos"] = Vector3.new(62.121219635009766, -12.388772010803223, 93.4290542602539),
             ["FishingPolePos"] = Vector3.new(64.75240325927734, -5.818235397338867, 94.7131118774414)
@@ -1239,7 +1239,7 @@ local TeleportService = game:GetService("TeleportService")
    end,
 })
 
-local Tab = Window:CreateTab("Messup Anim", 7564719393) -- Title, Image
+local Tab = Window:CreateTab("Messup Anim", 9154655900) -- Title, Image
 
 local Button = Tab:CreateButton({
    Name = "Loop Animation",
@@ -1702,62 +1702,199 @@ local SpinToggle = Tab:CreateToggle({
     end,
 })
 
+local LoseYourselfActive = false -- Track the current state
+
 local Toggle = Tab:CreateToggle({
     Name = "Lose Yourself",
     CurrentValue = false,
-    Flag = "Toggle1", -- Ensure a unique flag for configuration saving
+    Flag = "ToggleLoseYourself", -- Ensure a unique flag for configuration saving
     Callback = function(Value)
-        local spinSpeed = 2 -- Default spin speed
-        if Value then
-            -- Set gravity to 0
-            workspace.Gravity = 0
+        if LoseYourselfActive then
+            UNLOSEYOURSELF() -- Unlose Yourself when toggle is switched off
+        else
+            LOSEYOURSELF() -- Lose Yourself when toggle is switched on
+        end
+        LoseYourselfActive = not LoseYourselfActive
+    end,
+})
 
-            -- Lay script
-            local humanoid = character:FindFirstChild("Humanoid")
-            local rootPart = getRoot(character)
+-- Function to activate "Lose Yourself"
+function LOSEYOURSELF()
+    workspace.Gravity = 0 -- Set gravity to 0
 
-            if humanoid and rootPart then
-                humanoid.Sit = true
-                task.wait(0.1)
-                rootPart.CFrame = rootPart.CFrame * CFrame.Angles(math.pi * 0.5, 0, 0)
-                for _, animTrack in ipairs(humanoid:GetPlayingAnimationTracks()) do
-                    animTrack:Stop()
-                end
+    -- Lay script
+    local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    local rootPart = game.Players.LocalPlayer.Character and getRoot(game.Players.LocalPlayer.Character)
 
-                -- Spin script
-                -- Remove any existing spinning
-                for _, v in pairs(rootPart:GetChildren()) do
-                    if v.Name == "Spinning" then
-                        v:Destroy()
-                    end
-                end
+    if humanoid and rootPart then
+        humanoid.Sit = true
+        task.wait(0.1)
+        rootPart.CFrame = rootPart.CFrame * CFrame.Angles(math.pi * 0.5, 0, 0)
+        for _, animTrack in ipairs(humanoid:GetPlayingAnimationTracks()) do
+            animTrack:Stop()
+        end
 
-                -- Add new spinning
-                local spin = Instance.new("BodyAngularVelocity")
-                spin.Name = "Spinning"
-                spin.Parent = rootPart
-                spin.MaxTorque = Vector3.new(0, math.huge, 0)
-                spin.AngularVelocity = Vector3.new(0, spinSpeed, 0)
+        -- Spin script
+        for _, v in pairs(rootPart:GetChildren()) do
+            if v.Name == "Spinning" then
+                v:Destroy()
+            end
+        end
+
+        local spin = Instance.new("BodyAngularVelocity")
+        spin.Name = "Spinning"
+        spin.Parent = rootPart
+        spin.MaxTorque = Vector3.new(0, math.huge, 0)
+        spin.AngularVelocity = Vector3.new(0, 2, 0)
+    else
+        warn("Humanoid or HumanoidRootPart not found.")
+    end
+end
+
+-- Function to deactivate "Lose Yourself"
+function UNLOSEYOURSELF()
+    workspace.Gravity = 196.2 -- Reset gravity
+
+    -- Unspin script
+    local rootPart = game.Players.LocalPlayer.Character and getRoot(game.Players.LocalPlayer.Character)
+    if rootPart then
+        for _, v in pairs(rootPart:GetChildren()) do
+            if v.Name == "Spinning" then
+                v:Destroy()
+            end
+        end
+    end
+end
+
+local FLYING = false
+
+local function sFLY()
+    FLYING = true
+    repeat task.wait() until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    local T = game.Players.LocalPlayer.Character.PrimaryPart
+    local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+    local SPEED = 0
+    local BG = Instance.new('BodyGyro')
+    local BV = Instance.new('BodyVelocity')
+
+    BG.P = 9e4
+    BG.Parent = T
+    BV.Parent = T
+    BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+    BG.cframe = T.CFrame
+    BV.velocity = Vector3.new(0, 0, 0)
+    BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+
+    local userInputService = game:GetService("UserInputService")
+
+    -- Disable Animations
+    local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+    humanoid.PlatformStand = true
+
+    -- Listen for input to control flying
+    userInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            if input.KeyCode == Enum.KeyCode.W then CONTROL.F = 1 end
+            if input.KeyCode == Enum.KeyCode.S then CONTROL.B = -1 end
+            if input.KeyCode == Enum.KeyCode.A then CONTROL.L = -1 end
+            if input.KeyCode == Enum.KeyCode.D then CONTROL.R = 1 end
+            if input.KeyCode == Enum.KeyCode.Space then CONTROL.E = 1 end
+            if input.KeyCode == Enum.KeyCode.LeftControl then CONTROL.Q = -1 end
+        end
+    end)
+
+    userInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Keyboard then
+            if input.KeyCode == Enum.KeyCode.W then CONTROL.F = 0 end
+            if input.KeyCode == Enum.KeyCode.S then CONTROL.B = 0 end
+            if input.KeyCode == Enum.KeyCode.A then CONTROL.L = 0 end
+            if input.KeyCode == Enum.KeyCode.D then CONTROL.R = 0 end
+            if input.KeyCode == Enum.KeyCode.Space then CONTROL.E = 0 end
+            if input.KeyCode == Enum.KeyCode.LeftControl then CONTROL.Q = 0 end
+        end
+    end)
+
+    -- Update velocity and flying direction
+    task.spawn(function()
+        repeat task.wait()
+            if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0 then
+                SPEED = 50
             else
-                warn("Humanoid or HumanoidRootPart not found.")
+                SPEED = 0
+            end
+
+            BV.velocity = ((workspace.CurrentCamera.CFrame.LookVector * (CONTROL.F + CONTROL.B)) +
+                            ((workspace.CurrentCamera.CFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CFrame.p)) * SPEED
+            BG.cframe = workspace.CurrentCamera.CFrame
+        until not FLYING
+        BG:Destroy()
+        BV:Destroy()
+
+        -- Restore humanoid animations when flying stops
+        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+        humanoid.PlatformStand = false
+    end)
+end
+
+local function NOFLY()
+    FLYING = false
+    if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+        local humanoid = game.Players.LocalPlayer.Character.Humanoid
+        humanoid.PlatformStand = false
+        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+    end
+end
+
+-- Create the Toggle Button for Fly/Unfly
+local FlyToggle = Tab:CreateToggle({
+    Name = "Fly/Unfly",
+    CurrentValue = false,
+    Flag = "FlyToggle", -- Unique identifier for saving state
+    Callback = function(Value)
+        if Value then
+            if FLYING == false then
+                sFLY()
             end
         else
-            -- Reset gravity
-            workspace.Gravity = 196.2 -- Default gravity
-
-            -- Unspin script
-            local rootPart = getRoot(character)
-            if rootPart then
-                for _, v in pairs(rootPart:GetChildren()) do
-                    if v.Name == "Spinning" then
-                        v:Destroy()
-                    end
-                end
+            if FLYING == true then
+                NOFLY()
             end
         end
     end,
 })
 
+
+-- Create the Toggle with a Keybind
+local FlyKeybind = Tab:CreateKeybind({
+    Name = "Fly/Unfly Keybind",
+    CurrentKeybind = "F", -- Default keybind
+    HoldToInteract = false,
+    Flag = "FlyKeybind", -- Unique identifier
+    Callback = function(Keybind)
+        if FLYING then
+            NOFLY()
+        else
+            sFLY()
+        end
+    end,
+})
+
+local Keybind = Tab:CreateKeybind({
+    Name = "Lose Yourself Keybind",
+    CurrentKeybind = "E", -- Default keybind
+    HoldToInteract = false,
+    Flag = "KeybindLoseYourself",
+    Callback = function(Keybind)
+        if LoseYourselfActive then
+            UNLOSEYOURSELF() -- Unlose Yourself on key press when active
+        else
+            LOSEYOURSELF() -- Lose Yourself on key press when inactive
+        end
+        LoseYourselfActive = not LoseYourselfActive
+    end,
+})
 
 local Button = Tab:CreateButton({
    Name = "CS Resoluiton",
