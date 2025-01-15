@@ -40,7 +40,7 @@ FooterLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 FooterLabel.TextSize = 16
 FooterLabel.Font = Enum.Font.SourceSans
 FooterLabel.TextWrapped = true
-FooterLabel.Text = "For example, you can try these executors if it doesn't work:\nZorara, Argon, Cryptic, Swift, or any other paid executor, or mobile executor."
+FooterLabel.Text = "For example, you can try these free executors if it doesn't work:\nZorara, Argon, Cryptic, Swift, or any other paid executor, or mobile executor."
 FooterLabel.Parent = Frame
 
 local duration = 6
