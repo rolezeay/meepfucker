@@ -1339,7 +1339,7 @@ local spectating = false
 local Input = Tab:CreateInput({
    Name = "Player Input",
    CurrentValue = "",
-   PlaceholderText = "Enter Player Name or Display Name",
+   PlaceholderText = "enter player name or display name",
    RemoveTextAfterFocusLost = false,
    Flag = "Input1",
    Callback = function(Text)
@@ -1622,6 +1622,142 @@ local Input = Tab:CreateInput({
 
    end,
 })
+
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local spinSpeed = 10 -- Default spin speed
+local isSpinning = false -- To track the spin state
+
+local function getRoot(character)
+    return character:FindFirstChild("HumanoidRootPart")
+end
+
+local function createSpin(speed)
+    local rootPart = getRoot(character)
+    if rootPart then
+        -- Remove existing spinning instance
+        for _, v in pairs(rootPart:GetChildren()) do
+            if v.Name == "Spinning" then
+                v:Destroy()
+            end
+        end
+
+        -- Add new spinning instance
+        local spin = Instance.new("BodyAngularVelocity")
+        spin.Name = "Spinning"
+        spin.Parent = rootPart
+        spin.MaxTorque = Vector3.new(0, math.huge, 0)
+        spin.AngularVelocity = Vector3.new(0, speed, 0)
+    else
+        warn("HumanoidRootPart not found.")
+    end
+end
+
+local function removeSpin()
+    local rootPart = getRoot(character)
+    if rootPart then
+        for _, v in pairs(rootPart:GetChildren()) do
+            if v.Name == "Spinning" then
+                v:Destroy()
+            end
+        end
+    end
+end
+
+-- Input box for setting spin speed
+local SpinSpeedInput = Tab:CreateInput({
+    Name = "Set Spin Speed",
+    CurrentValue = tostring(spinSpeed),
+    PlaceholderText = "enter spin speed",
+    RemoveTextAfterFocusLost = false,
+    Flag = "SpinSpeedInput",
+    Callback = function(Text)
+        local newSpeed = tonumber(Text)
+        if newSpeed then
+            spinSpeed = newSpeed
+            if isSpinning then
+                createSpin(spinSpeed) -- Update spinning with new speed
+            end
+        else
+            warn("Invalid input. Please enter a number.")
+        end
+    end,
+})
+
+-- Toggle for enabling/disabling spinning (placed directly below the input)
+local SpinToggle = Tab:CreateToggle({
+    Name = "Spin/Unspin",
+    CurrentValue = false,
+    Flag = "SpinToggle",
+    Callback = function(Value)
+        isSpinning = Value
+        if isSpinning then
+            createSpin(spinSpeed)
+        else
+            removeSpin()
+        end
+    end,
+})
+
+local Toggle = Tab:CreateToggle({
+    Name = "Lose Yourself",
+    CurrentValue = false,
+    Flag = "Toggle1", -- Ensure a unique flag for configuration saving
+    Callback = function(Value)
+        local spinSpeed = 2 -- Default spin speed
+        if Value then
+            -- Set gravity to 0
+            workspace.Gravity = 0
+
+            -- Lay script
+            local humanoid = character:FindFirstChild("Humanoid")
+            local rootPart = getRoot(character)
+
+            if humanoid and rootPart then
+                humanoid.Sit = true
+                task.wait(0.1)
+                rootPart.CFrame = rootPart.CFrame * CFrame.Angles(math.pi * 0.5, 0, 0)
+                for _, animTrack in ipairs(humanoid:GetPlayingAnimationTracks()) do
+                    animTrack:Stop()
+                end
+
+                -- Spin script
+                -- Remove any existing spinning
+                for _, v in pairs(rootPart:GetChildren()) do
+                    if v.Name == "Spinning" then
+                        v:Destroy()
+                    end
+                end
+
+                -- Add new spinning
+                local spin = Instance.new("BodyAngularVelocity")
+                spin.Name = "Spinning"
+                spin.Parent = rootPart
+                spin.MaxTorque = Vector3.new(0, math.huge, 0)
+                spin.AngularVelocity = Vector3.new(0, spinSpeed, 0)
+            else
+                warn("Humanoid or HumanoidRootPart not found.")
+            end
+        else
+            -- Reset gravity
+            workspace.Gravity = 196.2 -- Default gravity
+
+            -- Unspin script
+            local rootPart = getRoot(character)
+            if rootPart then
+                for _, v in pairs(rootPart:GetChildren()) do
+                    if v.Name == "Spinning" then
+                        v:Destroy()
+                    end
+                end
+            end
+        end
+    end,
+})
+
 
 local Button = Tab:CreateButton({
    Name = "CS Resoluiton",
