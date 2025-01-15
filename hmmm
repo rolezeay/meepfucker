@@ -1,4 +1,4 @@
- local function service(...) return game:GetService(...) end
+local function service(...) return game:GetService(...) end
 local Players = service("Players")
 local MarketplaceService = service("MarketplaceService")
 local ReplicatedStorage = service("ReplicatedStorage")
@@ -8,6 +8,55 @@ local Constants = require(ReplicatedStorage:WaitForChild("Constants"))
 local Connection = ReplicatedStorage:WaitForChild("Connection")
 local ConnectionEvent = ReplicatedStorage:WaitForChild("ConnectionEvent")
  
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local FooterLabel = Instance.new("TextLabel")
+
+ScreenGui.Name = "warn"
+ScreenGui.Parent = game.CoreGui
+
+Frame.Size = UDim2.new(0, 600, 0, 150)
+Frame.Position = UDim2.new(0.5, -300, 0.5, -75)
+Frame.BackgroundTransparency = 0
+Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Frame.BorderSizePixel = 0
+Frame.Parent = ScreenGui
+
+TextLabel.Size = UDim2.new(1, -20, 0, 50)
+TextLabel.Position = UDim2.new(0, 10, 0, 10)
+TextLabel.BackgroundTransparency = 1
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.TextSize = 20
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.TextWrapped = true
+TextLabel.Text = "If the GUI doesn't pop up after this message, your executor is probably not powerful enough. If so, please get a more powerful executor to execute this script."
+TextLabel.Parent = Frame
+
+FooterLabel.Size = UDim2.new(1, -20, 0, 60)
+FooterLabel.Position = UDim2.new(0, 10, 0, 70)
+FooterLabel.BackgroundTransparency = 1
+FooterLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+FooterLabel.TextSize = 16
+FooterLabel.Font = Enum.Font.SourceSans
+FooterLabel.TextWrapped = true
+FooterLabel.Text = "For example, you can try these executors if it doesn't work:\nZorara, Argon, Cryptic, Swift, or any other paid executor, or mobile executor."
+FooterLabel.Parent = Frame
+
+local duration = 6
+local fadeTime = 2
+
+wait(duration)
+
+for i = 0, 1, 0.05 do
+    TextLabel.TextTransparency = i
+    FooterLabel.TextTransparency = i
+    Frame.BackgroundTransparency = i
+    wait(fadeTime / 20)
+end
+
+ScreenGui:Destroy()
+
   local player = game.Players.LocalPlayer
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
