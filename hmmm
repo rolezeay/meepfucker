@@ -61,7 +61,7 @@ ScreenGui:Destroy()
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Meep Fucker v2.1",
+    Title = "Meep Fucker v2.2",
     Text = "made with love by plusgiant on discord.",
     Icon = playerHeadIcon,
     Duration = 5,
@@ -97,9 +97,9 @@ Rayfield:Notify({
 })
 
 local Window = Rayfield:CreateWindow({
-   Name = "Meepcity Fucker v2.1 | " .. executorName .. " | " .. gameName,
+   Name = "Meepcity Fucker v2.2 | " .. executorName .. " | " .. gameName,
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Meepcity Fucker v2.1",
+   LoadingTitle = "Meepcity Fucker v2.2",
    LoadingSubtitle = "by plusgiant on discord",
    Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
@@ -780,7 +780,144 @@ local Button = Tab:CreateButton({
 
 local Section = Tab:CreateSection("Step 3 enjoy annoying teenager speds!")
 
-local Tab = Window:CreateTab("Meepcity (NEW)", 105651797171702) -- Title, Image,
+local Tab = Window:CreateTab("Avatar & Shopping", 7734052925) -- Title, Image,
+local Section = Tab:CreateSection("NEW ON V2.2 (WARNING: RESETS YOUR AVATAR)")
+
+local args = {
+    [1] = {}  -- This table will store all accessory data
+}
+
+-- Function to send the data to the server
+local function invokeSaveAvatar()
+    game:GetService("ReplicatedStorage").FunctionConnections.NewAESaveAvatar:InvokeServer(unpack(args))
+end
+
+-- Create a textbox for HatAccessory
+local HatAccessoryInput = Tab:CreateInput({
+   Name = "Hat Accessory",
+   CurrentValue = "",
+   PlaceholderText = "hat accessory id",
+   RemoveTextAfterFocusLost = false,
+   Flag = "HatAccessoryInput",
+   Callback = function(Text)
+       if Text and Text ~= "" then
+           local existingIDs = args[1]["HatAccessory"] and args[1]["HatAccessory"]:split(",") or {}
+           table.insert(existingIDs, Text)  -- Append the new ID
+           args[1]["HatAccessory"] = table.concat(existingIDs, ",")
+           print("Updated HatAccessory IDs:", args[1]["HatAccessory"])
+           invokeSaveAvatar()
+       end
+   end,
+})
+
+-- Create a textbox for HairAccessory
+local HairAccessoryInput = Tab:CreateInput({
+   Name = "Hair Accessory",
+   CurrentValue = "",
+   PlaceholderText = "hair accessory id",
+   RemoveTextAfterFocusLost = false,
+   Flag = "HairAccessoryInput",
+   Callback = function(Text)
+       if Text and Text ~= "" then
+           local existingIDs = args[1]["HairAccessory"] and args[1]["HairAccessory"]:split(",") or {}
+           table.insert(existingIDs, Text)
+           args[1]["HairAccessory"] = table.concat(existingIDs, ",")
+           print("Updated HairAccessory IDs:", args[1]["HairAccessory"])
+           invokeSaveAvatar()
+       end
+   end,
+})
+
+-- Create a textbox for Pants
+local PantsInput = Tab:CreateInput({
+   Name = "Pants (Classic)",
+   CurrentValue = "",
+   PlaceholderText = "classic pants id",
+   RemoveTextAfterFocusLost = false,
+   Flag = "PantsInput",
+   Callback = function(Text)
+       if Text and Text ~= "" then
+           local existingIDs = args[1]["Pants"] and args[1]["Pants"]:split(",") or {}
+           table.insert(existingIDs, Text)
+           args[1]["Pants"] = table.concat(existingIDs, ",")
+           print("Updated Pants IDs:", args[1]["Pants"])
+           invokeSaveAvatar()
+       end
+   end,
+})
+
+-- Create a textbox for Shirt
+local ShirtInput = Tab:CreateInput({
+   Name = "Shirt (Classic)",
+   CurrentValue = "",
+   PlaceholderText = "classic shirt id",
+   RemoveTextAfterFocusLost = false,
+   Flag = "ShirtInput",
+   Callback = function(Text)
+       if Text and Text ~= "" then
+           local existingIDs = args[1]["Shirt"] and args[1]["Shirt"]:split(",") or {}
+           table.insert(existingIDs, Text)
+           args[1]["Shirt"] = table.concat(existingIDs, ",")
+           print("Updated Shirt IDs:", args[1]["Shirt"])
+           invokeSaveAvatar()
+       end
+   end,
+})
+
+-- Create a textbox for BackAccessory
+local BackAccessoryInput = Tab:CreateInput({
+   Name = "Back Accessory",
+   CurrentValue = "",
+   PlaceholderText = "back accessory id",
+   RemoveTextAfterFocusLost = false,
+   Flag = "BackAccessoryInput",
+   Callback = function(Text)
+       if Text and Text ~= "" then
+           local existingIDs = args[1]["BackAccessory"] and args[1]["BackAccessory"]:split(",") or {}
+           table.insert(existingIDs, Text)
+           args[1]["BackAccessory"] = table.concat(existingIDs, ",")
+           print("Updated BackAccessory IDs:", args[1]["BackAccessory"])
+           invokeSaveAvatar()
+       end
+   end,
+})
+
+-- Create a textbox for NeckAccessory
+local NeckAccessoryInput = Tab:CreateInput({
+   Name = "Neck Accessory",
+   CurrentValue = "",
+   PlaceholderText = "neck accessory id",
+   RemoveTextAfterFocusLost = false,
+   Flag = "NeckAccessoryInput",
+   Callback = function(Text)
+       if Text and Text ~= "" then
+           local existingIDs = args[1]["NeckAccessory"] and args[1]["NeckAccessory"]:split(",") or {}
+           table.insert(existingIDs, Text)
+           args[1]["NeckAccessory"] = table.concat(existingIDs, ",")
+           print("Updated NeckAccessory IDs:", args[1]["NeckAccessory"])
+           invokeSaveAvatar()
+       end
+   end,
+})
+
+local Section = Tab:CreateSection("Shopping: more will be here in future")
+
+local Button = Tab:CreateButton({
+   Name = "Buy present capsule 200 COINS",
+   Callback = function()
+-- Script generated by SimpleSpy - credits to exx#9394
+
+local args = {
+    [1] = 1401,
+    [2] = 1
+}
+
+game:GetService("ReplicatedStorage").FunctionConnections.RequestBuyCapsuleFromCapsuleMachineForCurrency:InvokeServer(unpack(args))
+
+   end,
+})
+
+local Tab = Window:CreateTab("Meepcity", 105651797171702) -- Title, Image,
 
 local Section = Tab:CreateSection("NEW ON V2.0")
 
@@ -1132,7 +1269,7 @@ game:GetService("Players").LocalPlayer.PlayerGui.MainGui.CoinsContainer.Containe
 })
 
 local Tab = Window:CreateTab("Server (NEW)", 7734053426)
-local Section = Tab:CreateSection(" (NEW ON V2.1) Mess with the server.")
+local Section = Tab:CreateSection(" (NEW ON V2.2) Mess with the server.")
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
