@@ -61,7 +61,7 @@ ScreenGui:Destroy()
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
 game.StarterGui:SetCore("SendNotification", {
-    Title = "Meep Fucker v2.2",
+    Title = "zynlope v2.2",
     Text = "made with love by plusgiant on discord.",
     Icon = playerHeadIcon,
     Duration = 5,
@@ -97,9 +97,9 @@ Rayfield:Notify({
 })
 
 local Window = Rayfield:CreateWindow({
-   Name = "Meepcity Fucker v2.2 | " .. executorName .. " | " .. gameName,
+   Name = "zynlope v2.2 | " .. executorName .. " | " .. gameName,
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Meepcity Fucker v2.2",
+   LoadingTitle = "zynlope v2.2",
    LoadingSubtitle = "by plusgiant on discord",
    Theme = "Amethyst", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
