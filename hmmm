@@ -57,7 +57,7 @@ end
 
 ScreenGui:Destroy()
 
-  local player = game.Players.LocalPlayer
+local player = game.Players.LocalPlayer
 local playerHeadIcon = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png"
 
 game.StarterGui:SetCore("SendNotification", {
@@ -781,126 +781,105 @@ local Button = Tab:CreateButton({
 local Section = Tab:CreateSection("Step 3 enjoy annoying teenager speds!")
 
 local Tab = Window:CreateTab("Avatar & Shopping", 7734052925) -- Title, Image,
-local Section = Tab:CreateSection("NEW ON V2.2 (WARNING: RESETS YOUR AVATAR)")
+local Section = Tab:CreateSection("goofy ahh animations lowk")
+-- Dropdown to list animations
+local Dropdown = Tab:CreateDropdown({
+   Name = "Select Animation",
+   Options = {}, -- Options will be filled dynamically
+   CurrentOption = {},
+   MultipleOptions = false,
+   Flag = "AnimationDropdown",
+   Callback = function(Options)
+      selectedAnimation = Options[1] -- Save the selected animation name
+      print("Selected animation: " .. selectedAnimation)
+   end,
+})
 
-local args = {
-    [1] = {}  -- This table will store all accessory data
-}
+-- Toggle to play/stop the animation
+local Toggle = Tab:CreateToggle({
+   Name = "Play/Stop Animation",
+   CurrentValue = false,
+   Flag = "AnimationToggle",
+   Callback = function(Value)
+      if selectedAnimation then
+         local player = game.Players.LocalPlayer
+         local animationObjectsFolder = player:FindFirstChild("PlayerScripts"):FindFirstChild("AnimationObjects")
 
--- Function to send the data to the server
-local function invokeSaveAvatar()
-    game:GetService("ReplicatedStorage").FunctionConnections.NewAESaveAvatar:InvokeServer(unpack(args))
+         if animationObjectsFolder then
+            local animation = animationObjectsFolder:FindFirstChild(selectedAnimation)
+
+            if animation and animation:IsA("Animation") then
+               local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+
+               if humanoid then
+                  if Value then
+                     -- Play the animation
+                     if not activeAnimationTrack then
+                        local animationTrack = humanoid:LoadAnimation(animation)
+                        animationTrack:Play()
+                        activeAnimationTrack = animationTrack
+                        print("Playing animation: " .. selectedAnimation)
+                     end
+                  else
+                     -- Stop the animation
+                     if activeAnimationTrack then
+                        activeAnimationTrack:Stop()
+                        activeAnimationTrack = nil
+                        print("Stopped animation: " .. selectedAnimation)
+                     end
+                  end
+               else
+                  print("Humanoid not found in character.")
+               end
+            else
+               print("Animation not found in AnimationObjects folder.")
+            end
+         else
+            print("AnimationObjects folder not found in PlayerScripts.")
+         end
+      else
+         print("No animation selected.")
+      end
+   end,
+})
+
+-- Function to populate dropdown with animations
+local function populateDropdown()
+   local player = game.Players.LocalPlayer
+   local animationObjectsFolder = player:FindFirstChild("PlayerScripts"):FindFirstChild("AnimationObjects")
+
+   if animationObjectsFolder then
+      local animations = {}
+
+      for _, obj in ipairs(animationObjectsFolder:GetChildren()) do
+         if obj:IsA("Animation") then
+            table.insert(animations, obj.Name)
+         end
+      end
+
+      if #animations > 0 then
+         Dropdown:Refresh(animations, false) -- Update dropdown options
+         print("Dropdown populated with animations.")
+      else
+         print("No animations found in AnimationObjects folder.")
+      end
+   else
+      print("AnimationObjects folder not found in PlayerScripts.")
+   end
 end
 
--- Create a textbox for HatAccessory
-local HatAccessoryInput = Tab:CreateInput({
-   Name = "Hat Accessory",
-   CurrentValue = "",
-   PlaceholderText = "hat accessory id",
-   RemoveTextAfterFocusLost = false,
-   Flag = "HatAccessoryInput",
-   Callback = function(Text)
-       if Text and Text ~= "" then
-           local existingIDs = args[1]["HatAccessory"] and args[1]["HatAccessory"]:split(",") or {}
-           table.insert(existingIDs, Text)  -- Append the new ID
-           args[1]["HatAccessory"] = table.concat(existingIDs, ",")
-           print("Updated HatAccessory IDs:", args[1]["HatAccessory"])
-           invokeSaveAvatar()
-       end
+-- Automatically populate dropdown on script execution
+populateDropdown()
+
+local Button = Tab:CreateButton({
+   Name = "Outfit loader/item adder gui",
+   Callback = function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/rolezeay/zynlope-avatar-laoder/refs/heads/main/hmm"))()
    end,
 })
 
--- Create a textbox for HairAccessory
-local HairAccessoryInput = Tab:CreateInput({
-   Name = "Hair Accessory",
-   CurrentValue = "",
-   PlaceholderText = "hair accessory id",
-   RemoveTextAfterFocusLost = false,
-   Flag = "HairAccessoryInput",
-   Callback = function(Text)
-       if Text and Text ~= "" then
-           local existingIDs = args[1]["HairAccessory"] and args[1]["HairAccessory"]:split(",") or {}
-           table.insert(existingIDs, Text)
-           args[1]["HairAccessory"] = table.concat(existingIDs, ",")
-           print("Updated HairAccessory IDs:", args[1]["HairAccessory"])
-           invokeSaveAvatar()
-       end
-   end,
-})
 
--- Create a textbox for Pants
-local PantsInput = Tab:CreateInput({
-   Name = "Pants (Classic)",
-   CurrentValue = "",
-   PlaceholderText = "classic pants id",
-   RemoveTextAfterFocusLost = false,
-   Flag = "PantsInput",
-   Callback = function(Text)
-       if Text and Text ~= "" then
-           local existingIDs = args[1]["Pants"] and args[1]["Pants"]:split(",") or {}
-           table.insert(existingIDs, Text)
-           args[1]["Pants"] = table.concat(existingIDs, ",")
-           print("Updated Pants IDs:", args[1]["Pants"])
-           invokeSaveAvatar()
-       end
-   end,
-})
-
--- Create a textbox for Shirt
-local ShirtInput = Tab:CreateInput({
-   Name = "Shirt (Classic)",
-   CurrentValue = "",
-   PlaceholderText = "classic shirt id",
-   RemoveTextAfterFocusLost = false,
-   Flag = "ShirtInput",
-   Callback = function(Text)
-       if Text and Text ~= "" then
-           local existingIDs = args[1]["Shirt"] and args[1]["Shirt"]:split(",") or {}
-           table.insert(existingIDs, Text)
-           args[1]["Shirt"] = table.concat(existingIDs, ",")
-           print("Updated Shirt IDs:", args[1]["Shirt"])
-           invokeSaveAvatar()
-       end
-   end,
-})
-
--- Create a textbox for BackAccessory
-local BackAccessoryInput = Tab:CreateInput({
-   Name = "Back Accessory",
-   CurrentValue = "",
-   PlaceholderText = "back accessory id",
-   RemoveTextAfterFocusLost = false,
-   Flag = "BackAccessoryInput",
-   Callback = function(Text)
-       if Text and Text ~= "" then
-           local existingIDs = args[1]["BackAccessory"] and args[1]["BackAccessory"]:split(",") or {}
-           table.insert(existingIDs, Text)
-           args[1]["BackAccessory"] = table.concat(existingIDs, ",")
-           print("Updated BackAccessory IDs:", args[1]["BackAccessory"])
-           invokeSaveAvatar()
-       end
-   end,
-})
-
--- Create a textbox for NeckAccessory
-local NeckAccessoryInput = Tab:CreateInput({
-   Name = "Neck Accessory",
-   CurrentValue = "",
-   PlaceholderText = "neck accessory id",
-   RemoveTextAfterFocusLost = false,
-   Flag = "NeckAccessoryInput",
-   Callback = function(Text)
-       if Text and Text ~= "" then
-           local existingIDs = args[1]["NeckAccessory"] and args[1]["NeckAccessory"]:split(",") or {}
-           table.insert(existingIDs, Text)
-           args[1]["NeckAccessory"] = table.concat(existingIDs, ",")
-           print("Updated NeckAccessory IDs:", args[1]["NeckAccessory"])
-           invokeSaveAvatar()
-       end
-   end,
-})
-
-local Section = Tab:CreateSection("Shopping: more will be here in future")
+local Section = Tab:CreateSection("Shopping")
 
 local Button = Tab:CreateButton({
    Name = "Buy present capsule 200 COINS",
