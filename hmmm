@@ -918,7 +918,6 @@ game:GetService("ReplicatedStorage").FunctionConnections.RequestBuyCapsuleFromCa
 })
 
 local Tab = Window:CreateTab("Meepcity", 105651797171702) -- Title, Image,
-
 local Section = Tab:CreateSection("NEW ON V2.0")
 
 local Button = Tab:CreateButton({
@@ -953,7 +952,7 @@ local Button = Tab:CreateButton({
 			fd.Categories[id] = {
 				CategoryId = id,
 				Image = 10730387329,
-				CatTitle = "Meepcity Fucker offsales 👅"
+				CatTitle = "zynlope offsales 👅"
 
 			}
 			for i,v in pairs(fd.Assets) do
@@ -974,7 +973,7 @@ local Button = Tab:CreateButton({
 	end
 
 Rayfield:Notify({
-   Title = "Meepcity Fucker",
+   Title = "zynlope",
    Content = "Now you can go check the stores on the playground to get the secret category for offsale items!",
    Duration = 6.5,
    Image = 10730387329,
