@@ -756,7 +756,7 @@ local function startFishing()
     end
 end
 
-local Section = Tab:CreateSection("Or just crash the server with this.")
+local Section = Tab:CreateSection("Or just lag the server with this.")
 
 local Button = Tab:CreateButton({
    Name = "LAG SERVER",
